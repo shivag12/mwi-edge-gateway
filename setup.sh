@@ -95,7 +95,7 @@ function install() {
 
 function configure() {
   cp ${BASEDIR}/configs/routing.json /etc/wiotp-edge/routing.json
-  sed "s/URL_PLACEHOLDER/http:\/\/127.0.0.1:${HZN_API_LISTEN}/g" ${BASEDIR}/configs/mwi_startup.sh > /etc//profile.d/mwi_startup.sh
+  sed "s/URL_PLACEHOLDER/http:\/\/127.0.0.1:${HZN_API_LISTEN}/g" ${BASEDIR}/configs/mwi_startup.sh > /etc/profile.d/mwi_startup.sh
   chmod +x /etc/profile.d/mwi_startup.sh
 }
 
