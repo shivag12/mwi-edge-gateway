@@ -1,0 +1,139 @@
+// ############################################################################
+// Copyright 2019 IBM Corporation
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ###########################################################################
+
+// Routing-rules configuration file for the Edge-Node.
+
+// Note: Any text following // is consider a comment until the end of the line.
+
+// Routing-rules define how messages are forwarded within the Edge-Node.
+// Multiple routing-rules can be defined and these rules are evaluated for each
+// message a local device/application publishes to/in the Edge-Node.
+// Messages that are published to the Edge-Node from the cloud are not
+// subjected to routing (they are always published locally).
+
+// A routing rule is defined as a JSON object of the following format
+// The meaning of each field is listed below
+//  {
+//    "rule_id": id,
+//    "matching_filter": "filter",
+//    "destination": "destination",
+//    "continue_matching": true,
+//    "forward_skip_levels": 0,
+//    "store": true
+//  }
+
+//////// rule_id (type integer, mandatory)
+// An identifier for the rule.
+// Routing-rules are evaluated in increasing order according to the rule_id.
+// There should not be more than one rule with the same rule_id.
+
+//////// matching_filter (type string, mandatory)
+// The matching_filter is used to evaluate if the rule should be applied to
+// a published message.
+// The matching_filter should be in the format of an MQTT subscription.
+// The MQTT single ('+') and multi ('#') level wildcards are supported.
+// The matching_filter is evaluated against the topic on which the message is
+// published.
+// The matching_filter should be defined in WIoTP application topic format,
+// that is, it should include the /type/deviceType/id/deviceId fields.
+// Example: "matching_filter" : "iot-2/type/+/id/+/evt/EvtTypeAlarm/#"
+
+//////// destination (type string, mandatory)
+// The destination field defines where the message should be forwarded to.
+// The destination can have one of the following values
+//   "CLOUD" (forward message to the cloud)
+//   "IM" (forward message to the Information Management component)
+//   "LOCAL" (forward message locally on the Edge-Node)
+// Example: "destination" : "CLOUD"
+
+//////// continue_matching (type boolean, optional, default true)
+// Defines whether, in case the rule is matched, additional rules should be
+// evaluated.
+// Provides better control over routing when overlapping routing-rules exist.
+
+//////// forward_skip_levels (type integer, optional, default 0)
+// Defines how many levels from the original published topic should be removed
+// when the message is republished.
+// The default is zero which means the original topic is maintained.
+// Example: if forward_skip_levels is 1 and a message is published on topic
+// localPrefix/iot-2/type/T1/id/D1/evt/E1/fmt/json the message will be
+// re-published on topic iot-2/type/T1/id/D1/evt/E1/fmt/json
+
+//////// store (type boolean, optional, default true)
+// Defines whether store-and-forward should be applied to messages routed by
+// this rule. Only applies when the destination is CLOUD.
+// If set to false messages that much the rule will not be stored if the
+// Edge-Node is currently disconnected from the Cloud.
+
+//// Example
+//// The following example defines three routing rules.
+//// The first rule routes all events of type AlarmEvent directly to the Cloud.
+//// The second rule routes all events published on a topic starting with
+//// sendToCloud/iot-2 directly to the cloud. The message is forwarded on a
+//// topic that does not include the sendToCloud/ prefix (starts with iot-2).
+//// The third (last) rule is the default. It routes all other messages to the
+//// local MQTT Broker. These messages can then be consumed by any local
+//// consumer with a matching subscription.
+//
+//  [
+//    {
+//      "rule_id": 1,
+//      "matching_filter": "iot-2/type/+/id/+/evt/AlarmEvent/fmt/+",
+//      "destination": "CLOUD",
+//      "continue_matching": false
+//    },
+//    {
+//      "rule_id": 2,
+//      "matching_filter": "sendToCloud/iot-2/#",
+//      "destination": "CLOUD",
+//      "forward_skip_levels": 1,
+//      "continue_matching": false
+//    },
+//   {
+//      "rule_id": 3,
+//      "matching_filter": "#",
+//      "destination": "LOCAL"
+//    }
+//  ]
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Routing-rules
+///////////////////////////////////////////////////////////////////////////////
+
+// Default routing is to route everything locally
+
+[
+ {
+ "rule_id": 1,
+ "matching_filter": "iot-2/type/+/id/+/evt/status/fmt/json",
+ "destination": "CLOUD"
+ },
+ {
+ "rule_id": 2,
+ "matching_filter": "iotdevice-1/type/+/id/+/add/diag/log",
+ "destination": "CLOUD"
+ },
+ {
+ "rule_id": 3,
+ "matching_filter": "iot-2/type/+/id/+/evt/hazard/fmt/json",
+ "destination": "CLOUD"
+ },
+ {
+ "rule_id": 4,
+ "matching_filter": "iot-2/type/+/id/+/evt/+/fmt/json",
+ "destination": "LOCAL"
+ }]
