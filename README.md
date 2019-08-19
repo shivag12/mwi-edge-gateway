@@ -2,8 +2,8 @@
 ## Table of contents
 |   Topics   |
 |----------|
-|[1. Introduction](##introduction)|
-|[2. Installation](##installation)|
+|[1. Introduction](#introduction)|
+|[2. Installation](#installation)|
 
 ## Introduction
 With edge analytics, IBM Maximo Worker Insights can support scenarios in which workers cannot use mobile phones.
