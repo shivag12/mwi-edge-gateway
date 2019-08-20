@@ -118,22 +118,13 @@
 
 [
  {
- "rule_id": 1,
- "matching_filter": "iot-2/type/+/id/+/evt/status/fmt/json",
- "destination": "CLOUD"
+   "rule_id": 1,
+   "matching_filter": "send-to-cloud/iot-2/#",
+   "forward_skip_levels": 1,
+   "destination": "CLOUD"
  },
  {
- "rule_id": 2,
- "matching_filter": "iotdevice-1/type/+/id/+/add/diag/log",
- "destination": "CLOUD"
- },
- {
- "rule_id": 3,
- "matching_filter": "iot-2/type/+/id/+/evt/hazard/fmt/json",
- "destination": "CLOUD"
- },
- {
- "rule_id": 4,
- "matching_filter": "iot-2/type/+/id/+/evt/+/fmt/json",
- "destination": "LOCAL"
+   "rule_id": 2,
+   "matching_filter": "iot-2/type/+/id/+/evt/+/fmt/json",
+   "destination": "LOCAL"
  }]
