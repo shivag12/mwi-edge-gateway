@@ -808,7 +808,7 @@ if [ "$INSTALL" == "true" ]; then
             checkrc $?
 
             # Change the value of APIListen in /etc/horizon/anax.json
-	          anaxJson=$(jq ".Edge.APIListen = \"127.0.0.1:${HZN_API_LISTEN}\" " <<< $anaxJson)
+	        anaxJson=$(jq ".Edge.APIListen = \"127.0.0.1:${HZN_API_LISTEN}\" " <<< $anaxJson)
             checkrc $?
 
             # Change the value of CSSURL in /etc/horizon/anax.json
@@ -818,10 +818,10 @@ if [ "$INSTALL" == "true" ]; then
             # Write the new json back to /etc/horizon/anax.json
             echo "$anaxJson" > $ETC_DIR/horizon/anax.json
 
-            # Updating the bashrc with local API url. 
+            # Updating the .bashrc with local API url. 
             # Issue : HZN NODE LIST or HZN AGREEMENT LIST commands are failing because of the APIListen URL is not properly configured,
-            # Everytime have to run the mwi_Startup.sh file and in everytime after restart.
-            # Fix : Add the API Listen URL in the end of the bashrc file. 
+            # Everytime have to run the mwi_Startup.sh file and also afte system restart.
+            # Fix : Add the API Listen URL at end of the .bashrc file. 
             # Name : Shiva G
             echo -e "export HORIZON_URL = http://127.0.0.1:${HZN_API_LISTEN}" >>  ~/.bashrc
 
